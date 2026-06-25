@@ -4,14 +4,27 @@
 package gen
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/labstack/echo/v4"
+	"github.com/oapi-codegen/runtime"
 )
+
+// GetApiLangParams defines parameters for GetApiLang.
+type GetApiLangParams struct {
+	// Lang Language code to send
+	Lang *string `form:"lang,omitempty" json:"lang,omitempty"`
+}
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Get
 	// (GET /api/)
 	GetApi(ctx echo.Context) error
+	// Get the language message
+	// (GET /api/lang)
+	GetApiLang(ctx echo.Context, params GetApiLangParams) error
 	// Ping the API
 	// (GET /ping)
 	GetPing(ctx echo.Context) error
@@ -28,6 +41,24 @@ func (w *ServerInterfaceWrapper) GetApi(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetApi(ctx)
+	return err
+}
+
+// GetApiLang converts echo context to params.
+func (w *ServerInterfaceWrapper) GetApiLang(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetApiLangParams
+	// ------------- Optional query parameter "lang" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "lang", ctx.QueryParams(), &params.Lang)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter lang: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetApiLang(ctx, params)
 	return err
 }
 
@@ -69,6 +100,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/api/", wrapper.GetApi)
+	router.GET(baseURL+"/api/lang", wrapper.GetApiLang)
 	router.GET(baseURL+"/ping", wrapper.GetPing)
 
 }

@@ -15,5 +15,38 @@
 
 
 
+## Docker Compose での開発
+
+MySQL と Adminer だけを起動する場合:
+
+```sh
+docker compose up
+```
+
+バックエンドを単体で開発する場合:
+
+```sh
+docker compose --profile server up --build
+```
+
+実フロントエンドも使いたい場合は、別途 `client` を起動するか fullstack profile を使ってください。
+
+フロントエンドを OpenAPI の仮サーバー付きで開発する場合:
+
+```sh
+docker compose --profile client up --build
+```
+
+フロントエンドとバックエンドを両方起動する場合:
+
+```sh
+docker compose --profile fullstack up --build
+```
+
+- API: http://localhost:8080
+- フロントエンド: http://localhost:5173
+- 仮 API サーバー: http://localhost:4010
+- Adminer: http://localhost:8081
+
 ## Let's Start
 それでは早速Issue #1 を見てそこにある手順に従って進めていきましょう！

@@ -87,9 +87,9 @@ export interface paths {
     /** Get the language message */
     get: {
       parameters: {
-        query: {
+        query?: {
           /** @description Language code to send */
-          lang: string;
+          lang?: string;
         };
         header?: never;
         path?: never;
