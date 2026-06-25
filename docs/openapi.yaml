@@ -1,0 +1,50 @@
+openapi: 3.0.0
+info:
+  title: hackathon-training-api
+  version: 0.0.0
+
+paths:
+  /api/:
+    get:
+      summary: Get
+      responses:
+        "204":
+          description: No Content
+  /ping:
+    get:
+      summary: Ping the API
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: pong
+  /api/lang:
+    get:
+      summary: Get the language message
+      parameters:
+        - name: lang
+          in: query
+          required: true
+          description: Language code to send
+          schema:
+            type: string
+            example: en
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+                    example: Hello

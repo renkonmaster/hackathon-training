@@ -10,3 +10,7 @@ pnpm --dir client install
 mkdir -p .tools/bin
 GOBIN="$PWD/.tools/bin" go install golang.org/x/tools/cmd/goimports@latest
 '''
+
+[tasks.codegen]
+description = "API仕様書を変更したあと、フロントエンドとバックエンドの生成コードを更新する"
+run = "pnpm --dir client run codegen && cd server && go generate ./..."
